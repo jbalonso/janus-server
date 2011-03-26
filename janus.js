@@ -13,7 +13,7 @@ for(var i=0; i<secret_len; i++ ) {
 var auth = require('./auth');
 var doorman = new auth.DoormanAuth({
     secret: secret.toString('binary'),
-    max_msg_age_ms: 60*60000,
+    max_msg_age_ms: 500,
     max_session_age_ms: (7*24*60*60*1000),
     alg_accept: {sha1: true, sha256: true},
 });
