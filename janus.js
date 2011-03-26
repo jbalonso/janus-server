@@ -1,7 +1,18 @@
 
+// Load the secret
+var secret_hex = require('./secret');
+secret_hex = secret_hex.split(' ').join('').toLowerCase();
+var secret_len = secret_hex.length / 2;
+var secret = new Buffer(secret_len);
+for(var i=0; i<secret_len; i++ ) {
+    var high_nyb = "0123456789abcdef".indexOf(secret_hex[2*i]);
+    var  low_nyb = "0123456789abcdef".indexOf(secret_hex[2*i+1]);
+    secret[i] = (high_nyb << 4) + low_nyb;
+}
+
 var auth = require('./auth');
 var doorman = new auth.DoormanAuth({
-    secret: "1234567890123456789012345678901234567890123456789012345678901234",
+    secret: secret.toString('binary'),
     max_msg_age_ms: 60*60000,
     max_session_age_ms: (7*24*60*60*1000),
     alg_accept: {sha1: true, sha256: true},
