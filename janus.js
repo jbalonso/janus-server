@@ -25,6 +25,8 @@ repl.context.doorman = doorman;
 var Chunker = require('./chunker');
 var net = require('net');
 var cmd = function() {};
+var ping_interval = null;
+var ping_interval_ms = 30000;
 var server = net.createServer(function(socket) {
         var in_prefix = "\n" + socket.remoteAddress + " >> ";
         var out_prefix = socket.remoteAddress + " << ";
@@ -44,6 +46,9 @@ var server = net.createServer(function(socket) {
         cmd = repl.context.cmd;
 
         console.log(in_prefix);
+
+        if( ping_interval == null )
+            ping_interval = setInterval( function() { cmd('PING'); }, ping_interval_ms );
 
         var line_stream = new Chunker(socket);
         line_stream.on('data', function(line) {
