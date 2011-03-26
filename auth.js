@@ -27,7 +27,7 @@ function DoormanAuth( kwargs ) {
 
     // Save parameters
     this.secret = kwargs.secret;
-    this.max_msg_age_ms = kwargs.max_msg_age_ms || 5000; // 5 seconds
+    this.max_msg_age_ms = kwargs.max_msg_age_ms || 500; // 0.5 seconds
     this.max_session_age_ms = kwargs.max_session_age_ms || (7*24*60*60*1000); // 7 days 
     this.alg_accept = kwargs.alg_accept || {sha1: true};
 
