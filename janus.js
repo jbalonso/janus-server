@@ -24,6 +24,7 @@ repl.context.doorman = doorman;
 
 var Chunker = require('./chunker');
 var net = require('net');
+var cmd = function() {};
 var server = net.createServer(function(socket) {
         var in_prefix = "\n" + socket.remoteAddress + " >> ";
         var out_prefix = socket.remoteAddress + " << ";
@@ -40,6 +41,7 @@ var server = net.createServer(function(socket) {
             console.log(out_prefix + pkt_str);
             socket.write(pkt_str + '\r\n');
         }
+        cmd = repl.context.cmd;
 
         console.log(in_prefix);
 
@@ -55,5 +57,23 @@ var server = net.createServer(function(socket) {
         });
 
 });
+
+// Set time
+var vsprintf = require('./sprintf').vsprintf;
+function update_time() {
+    // Construct the timestamp 
+    var d = new Date();
+    var datetime = [
+        d.getUTCMonth() + 1,
+        d.getUTCDate(),
+        d.getUTCFullYear() - 2000,
+        d.getUTCHours(),
+        d.getUTCMinutes(),
+        d.getUTCSeconds(),
+    ];
+    var args = vsprintf('%02d%02d%02d%02d%02d%02d', datetime);
+    cmd('TIME', args);
+}
+repl.context.update_time = update_time;
 
 server.listen(4269);
