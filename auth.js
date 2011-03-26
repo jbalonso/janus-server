@@ -35,6 +35,7 @@ function DoormanAuth( kwargs ) {
     this.session_secret = null;
     this.session_name = null;
     this.alg = null;
+    this.time_shift = 0;
 
     // Operation Complete!
 }
@@ -93,6 +94,7 @@ DoormanAuth.prototype.parse = function( line ) {
         this.session_secret = secret;
         this.session_name = pkt.session;
         this.alg = alg;
+        this.time_shift = pkt.packet_age_ms();
     }
 
     // Operation Complete!
@@ -123,6 +125,7 @@ DoormanAuth.prototype.packet = function( cmd, arg_lst ) {
     // Timestamp
     pkt.timestamp = new Date();
     pkt.compute_offset();
+    pkt.offset -= this.time_shift;
 
     // Sign
     this.sign( pkt );
@@ -134,7 +137,7 @@ DoormanAuth.prototype.packet = function( cmd, arg_lst ) {
 DoormanAuth.prototype.issue_cmd = function( cmd ) {
     // Extract arguments
     var arg_lst = [];
-    for( var i = 0; i < arguments.length; i++ )
+    for( var i = 1; i < arguments.length; i++ )
         arg_lst.push(arguments[i]);
 
     // Operation Complete!
