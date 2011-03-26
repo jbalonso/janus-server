@@ -99,8 +99,10 @@ DoormanAuth.prototype.parse = function( line ) {
         this.session_secret = secret;
         this.session_name = pkt.session;
         this.alg = alg;
-        this.time_shift = pkt.packet_age_ms();
     }
+
+    // Dynamically adjust time shift
+    this.time_shift = time_shift + pkt_age;
 
     // Operation Complete!
     return pkt;
