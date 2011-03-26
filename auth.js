@@ -28,6 +28,7 @@ function DoormanAuth( kwargs ) {
     // Save parameters
     this.secret = kwargs.secret;
     this.max_msg_age_ms = kwargs.max_msg_age_ms || 500; // 0.5 seconds
+    this.max_rekey_age_ms = kwargs.max_rekey_age_ms || 5000; // 5 seconds
     this.max_session_age_ms = kwargs.max_session_age_ms || (7*24*60*60*1000); // 7 days 
     this.alg_accept = kwargs.alg_accept || {sha1: true};
 
@@ -73,7 +74,11 @@ DoormanAuth.prototype.parse = function( line ) {
     if( pkt.role != 'S' ) throw 'Invalid sender role.';
 
     // Determine if the signature age is acceptible
-    if( Math.abs(pkt.packet_age_ms()) > this.max_msg_age_ms )
+    var time_shift = this.time_shift;
+    var age_limit = this.max_msg_age_ms;
+    if( is_rekey ) { time_shift = 0; age_limit = this.max_rekey_age_ms; }
+    var pkt_age = pkt.packet_age_ms(time_shift);
+    if( Math.abs(pkt_age) > age_limit )
         throw 'Replay attack warning: packet too old.';
 
     // Determine if the session age is acceptible
@@ -187,9 +192,11 @@ Packet.prototype.session_age_ms = function() {
     return Number(new Date()) - Number(this.session_timestamp);
 };
 
-Packet.prototype.packet_age_ms = function() {
+Packet.prototype.packet_age_ms = function(time_shift) {
+    time_shift = time_shift || 0;
+
     // Operation Complete!
-    return Number(new Date()) - Number(this.timestamp);
+    return Number(new Date()) - Number(this.timestamp) - time_shift;
 };
 
 Packet.prototype.parse = function( line ) {
