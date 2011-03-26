@@ -10,7 +10,7 @@ for(var i=0; i<secret_len; i++ ) {
     secret[i] = (high_nyb << 4) + low_nyb;
 }
 
-var auth = require('./auth');
+var auth = require('./lib/auth');
 var doorman = new auth.DoormanAuth({
     secret: secret.toString('binary'),
     max_msg_age_ms: 500,
@@ -22,7 +22,7 @@ var repl = require('repl').start( 'janus> ' );
 repl.context.auth = auth;
 repl.context.doorman = doorman;
 
-var Chunker = require('./chunker');
+var Chunker = require('./lib/chunker');
 var net = require('net');
 var cmd = function() {};
 var ping_interval = null;
@@ -64,7 +64,7 @@ var server = net.createServer(function(socket) {
 });
 
 // Set time
-var vsprintf = require('./sprintf').vsprintf;
+var vsprintf = require('./lib/3rd/sprintf').vsprintf;
 function update_time() {
     // Construct the timestamp 
     var d = new Date();

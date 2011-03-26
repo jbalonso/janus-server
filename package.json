@@ -1,0 +1,18 @@
+{
+  "name": "janus",
+  "description": "Customizable service for opening doors with Doorman",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "/home/jalonso/Dropbox/git/janus.git"
+  },
+  "author": "Jason B. Alonso <jalonso@hackorp.com> (http://web.media.mit.edu/~jalonso)",
+  "main": "janus",
+  "directories": {
+      "lib": "./lib",
+    , "bin": "./bin"
+  },
+  "engines": {
+    "node": "0.4 || 0.5"
+  }
+}
