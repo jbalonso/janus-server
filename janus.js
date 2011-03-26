@@ -41,8 +41,7 @@ var server = net.createServer(function(socket) {
             socket.write(pkt_str + '\r\n');
         }
 
-        socket.write("\n");
-        console.log(out_prefix);
+        console.log(in_prefix);
 
         var line_stream = new Chunker(socket);
         line_stream.on('data', function(line) {
